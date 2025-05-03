@@ -2,7 +2,7 @@ package com.example.myapp.data
 
 
 class BookRepository(private val dao: BookDao) {
-    suspend fun getFirstBook(): BookEntity? {
+    suspend fun getFirstBook(): TranslationEntity? {
         return dao.getFirstBook()
     }
 

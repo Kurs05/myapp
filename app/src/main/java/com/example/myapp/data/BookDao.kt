@@ -6,8 +6,8 @@ import androidx.room.Query
 
 @Dao
 interface BookDao {
-    @Query("SELECT * FROM books LIMIT 1")
-    suspend fun getFirstBook(): BookEntity?
+    @Query("SELECT * FROM Translations LIMIT 1")
+    suspend fun getFirstBook(): TranslationEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(book: BookEntity)

@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import android.content.Context
 import androidx.room.Room
 
-@Database(entities = [BookEntity::class], version = 1)
+@Database(entities = [BookEntity::class,TranslationEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
 
@@ -15,8 +15,12 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "Bookslib.db"
-            ).build()
+            )
+                .createFromAsset("Bookslib.db")
+                .fallbackToDestructiveMigration() // опционально
+                .build()
         }
     }
+
 
 }
