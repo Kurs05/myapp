@@ -1,5 +1,6 @@
 package com.example.myapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapp.data.AppDatabase
 import com.example.myapp.data.BookEntity
 import com.example.myapp.databinding.ActivityMainBinding
-import kotlinx.coroutines.launch
 import com.example.myapp.data.adapter.BookAdapter
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -32,7 +33,14 @@ class MainActivity : AppCompatActivity() {
 
         // Настраиваем RecyclerView
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = BookAdapter(bookList)
+        adapter = BookAdapter(bookList) { book ->
+            // При клике открываем BookDetailActivity и передаём id и title
+            val intent = Intent(this, BookDetailActivity::class.java).apply {
+                putExtra("bookId", book.id)
+                putExtra("bookTitle", book.title)
+            }
+            startActivity(intent)
+        }
         binding.bookRecyclerView.adapter = adapter
 
         // Получаем книги из БД
@@ -63,4 +71,3 @@ class MainActivity : AppCompatActivity() {
         Log.d("MyLogAct", "onDestroy")
     }
 }
-
