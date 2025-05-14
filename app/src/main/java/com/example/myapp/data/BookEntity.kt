@@ -26,7 +26,6 @@ data class BookEntity(
         childColumns = ["translation_id"],
         onDelete = ForeignKey.CASCADE
     )]
-
     ,
     indices = [Index("book_id"), Index("translation_id")]
 )
