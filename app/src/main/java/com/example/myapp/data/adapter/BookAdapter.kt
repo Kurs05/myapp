@@ -26,6 +26,20 @@ class BookAdapter(private var books: List<BookEntity>) :
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = books[position]
         holder.title.text = book.title
+        //новое ! про обложку
+        val context = holder.itemView.context
+
+        if (!book.coverPath.isNullOrEmpty()) {
+            try {
+                val inputStream = context.assets.open(book.coverPath)
+                val drawable = android.graphics.drawable.Drawable.createFromStream(inputStream, null)
+                holder.image.setImageDrawable(drawable)
+            } catch (e: Exception) {
+                holder.image.setImageResource(R.drawable.default_book) // если нет файла
+            }
+        } else {
+            holder.image.setImageResource(R.drawable.default_book) // если путь пуст
+        }
         // Пока не отображаем изображение
     }
 
