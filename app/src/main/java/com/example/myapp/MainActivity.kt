@@ -15,56 +15,59 @@ import android.text.method.ScrollingMovementMethod
 
 
 class MainActivity : AppCompatActivity() {
-    var counter = 0
-    lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
-        binding.bookTextView.text = "Это текст из кода"
-        val db = AppDatabase.getDb(this)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-
         binding.bookTextView.movementMethod = ScrollingMovementMethod()
+
+        val db = AppDatabase.getDb(this)
+
         lifecycleScope.launch {
             try {
-                val book = db.bookDao().getFirstBook()
-                if (book != null) {
-                    binding.bookTextView.text = book.content
+                val bookId = intent.getIntExtra("book_id", -1)
+                val translation = if (bookId != -1) {
+                    db.bookDao().getTranslationByLanguage(bookId, "Ru")
                 } else {
-                    binding.bookTextView.text = "Книга не найдена"
+                    db.bookDao().getFirstBook()
+                }
+
+                if (translation != null) {
+                    binding.bookTextView.text = translation.content
+                } else {
+                    binding.bookTextView.text = "Перевод книги не найден"
                 }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Ошибка при получении книги: ${e.message}")
                 binding.bookTextView.text = "Ошибка при загрузке данных"
             }
         }
-
-
     }
 
-    override fun onStart()
-    {
+    override fun onStart() {
         super.onStart()
-        Log.d("MyLogAct","onStart")
+        Log.d("MyLogAct", "onStart")
     }
-    override fun onPause()
-    {
+
+    override fun onPause() {
         super.onPause()
-        Log.d("MyLogAct","onPause")
+        Log.d("MyLogAct", "onPause")
     }
-    override fun onDestroy()
-    {
+
+    override fun onDestroy() {
         super.onDestroy()
-        Log.d("MyLogAct","onDestroy")
+        Log.d("MyLogAct", "onDestroy")
     }
-
-
 }
+
