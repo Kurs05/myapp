@@ -31,6 +31,14 @@
             android:gravity="center"
             android:layout_marginBottom="12dp" />
 
+        <!-- СПИННЕР для выбора перевода -->
+
+        <Spinner
+            android:id="@+id/translationSpinner"
+            android:layout_width="159dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp" />
+
         <TextView
             android:id="@+id/bookDetailContent"
             android:layout_width="match_parent"
@@ -40,4 +48,5 @@
             android:lineSpacingExtra="6dp"
             android:textColor="@android:color/black" />
     </LinearLayout>
+
 </ScrollView>
