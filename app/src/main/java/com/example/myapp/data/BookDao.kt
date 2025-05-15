@@ -35,4 +35,8 @@ interface BookDao {
     // Получить перевод по языку
     @Query("SELECT * FROM Translations WHERE book_id = :bookId AND language = :lang LIMIT 1")
     suspend fun getTranslationByLanguage(bookId: Int, lang: String = "Ru"): TranslationEntity?
+
+    // 🔍 Поиск книг по названию
+    @Query("SELECT * FROM Books WHERE title LIKE '%' || :query || '%'")
+    suspend fun searchBooksByTitle(query: String): List<BookEntity>
 }

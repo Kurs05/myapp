@@ -13,6 +13,8 @@ import com.example.myapp.data.BookEntity
 import com.example.myapp.databinding.ActivityMainBinding
 import com.example.myapp.data.adapter.BookAdapter
 import kotlinx.coroutines.launch
+import androidx.core.widget.addTextChangedListener
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -65,6 +67,20 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Ошибка при загрузке книг: ${e.message}")
             }
         }
+
+        binding.searchEditText.addTextChangedListener { editable ->
+            val query = editable.toString().trim()
+            lifecycleScope.launch {
+                val db = AppDatabase.getDb(this@MainActivity)
+                val filteredBooks = if (query.isNotEmpty()) {
+                    db.bookDao().searchBooksByTitle(query)
+                } else {
+                    db.bookDao().getAllBooks()
+                }
+                adapter.updateBooks(filteredBooks)
+            }
+        }
+
     }
 
     override fun onStart() {
