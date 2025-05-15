@@ -33,13 +33,24 @@ class MainActivity : AppCompatActivity() {
 
         // Настраиваем RecyclerView
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(this)
+
+
         adapter = BookAdapter(bookList) { book ->
-            // При клике открываем BookDetailActivity и передаём id и title
-            val intent = Intent(this, BookDetailActivity::class.java).apply {
+           //тут короче в поток добавил
+            lifecycleScope.launch {
+                val db = AppDatabase.getDb(this@MainActivity)
+                    // и перевод
+                val translation = db.bookDao().getTranslationByLanguage(book.id)
+
+
+                // При клике открываем BookDetailActivity и передаём id и title
+            val intent = Intent(this@MainActivity, BookDetailActivity::class.java).apply {
                 putExtra("bookId", book.id)
                 putExtra("bookTitle", book.title)
+                    //и контент
+                putExtra("bookContent",translation?.content)
             }
-            startActivity(intent)
+            startActivity(intent)}
         }
         binding.bookRecyclerView.adapter = adapter
 

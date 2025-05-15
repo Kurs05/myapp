@@ -38,20 +38,25 @@ class BookAdapter(
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = books[position]
         holder.title.text = book.title
-
-        // Загрузка обложки книги
+    // Загрузка обложки книги из drawable
         val context = holder.itemView.context
         if (!book.coverPath.isNullOrEmpty()) {
-            try {
-                val inputStream = context.assets.open(book.coverPath)
-                val drawable = android.graphics.drawable.Drawable.createFromStream(inputStream, null)
-                holder.image.setImageDrawable(drawable)
-            } catch (e: Exception) {
-                holder.image.setImageResource(R.drawable.default_book) // если файл не найден
+            // Получаем ресурс по имени (без расширения)
+            val resourceId = context.resources.getIdentifier(
+                book.coverPath,
+                "drawable",
+                context.packageName
+            )
+
+            if (resourceId != 0) {
+                holder.image.setImageResource(resourceId)
+            } else {
+                holder.image.setImageResource(R.drawable.default_book) // если не найден
             }
         } else {
             holder.image.setImageResource(R.drawable.default_book) // если путь пуст
         }
+
     }
 
     override fun getItemCount(): Int = books.size
